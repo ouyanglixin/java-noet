@@ -426,3 +426,220 @@ public enum RequestMethod {
 
 ### 7.springMvc支持的默认参数类型
 
+这些类型只要写在方法参数中就可以使用了。
+
+1. HttpServletRequest 对象
+2. HttpServletResponse 对象
+3. HttpSession 对象
+4. Mode/ModeIMap 对象
+5. Map<String,Object> 对象
+
+### 8.日期处理
+
+#### 1.日期注入
+
+> 日期类型不能自动注入到方法的参数中。需要单独做转换处理。使用@DateTimeFormat注解，需要在springmvc.xml文件中添加<mvc:annotation-driven/>标签。
+>
+> 1.方法参数上使用 @DateTimeFormat 注解
+>
+> ```java
+> @RequestMapping("/submitone")
+> public String submitdateone(
+> @DateTimeFormat(pattern="yyyy-MM-dd")
+>         Date mydate){
+>     System.out.println(mydate);
+>     return "dateShow";
+> }
+> ```
+>
+> 2.对象set方法上加上 @DateTimeFormat 注解
+>
+> ```java
+> @DateTimeFormat(pattern="yyyy-MM-dd")
+> public void setDate(Date date) {
+> this.date = date;
+> }
+> ```
+>
+> 3.@InitBinder 注解解决类中日期问题
+>
+> ```java
+> @InitBinder
+> public void initBinder(WebDataBinder dataBinder) {
+>     SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+> dataBinder.registerCustomEditor(Date.class, new CustomDateEditor(sf, true));
+> }
+> ```
+>
+> 这样在类中出现的所有日期都可以进行转换了。
+
+#### 2.日期显示
+
+- Json 中的日期显示
+
+需要在类中的**成员变量的getXXX方法**上加注解
+
+```java
+@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+public Date getDate() {
+return date;
+}
+```
+
+- JSP页面的日期显示
+
+需要使用国际化标签，先添加依赖
+
+```java
+<dependency>
+<groupId>jstl</groupId>
+<artifactId>jstl</artifactId>
+<version>1.2</version>
+</dependency>
+```
+
+导入国际化的标签库
+
+```jsp
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+```
+
+```jsp
+<div id="stulistgood">
+<c:forEach items="${list}" var="stu">
+<p>${stu.name}-------${stu.age}-------<fmt:formatDate value="${stu.date}" pattern="yyyy-MM-dd"></fmt:formatDate></p>
+</c:forEach>
+</div>
+```
+
+### 9.<mvc:annotation-driven/>标签的使用
+
+> <mvc:annotation-driven/>会自动注册两个bean，分别为
+>
+> ```java
+> DefaultAnnotationHandlerMapping 和 AnnotationMethodHandlerAdapter
+> ```
+>
+> 是springmvc为@controller分发请求所必须的。除了注册了这两个bean，还提供了很多支持
+>
+> 1. 支持使用ConversionService 实例对表单参数进行类型转换
+> 2. 支持使用 @NumberFormat 、@DateTimeFormat 时间转换封装
+> 3. 注解完成数据类型的格式化
+> 4. 支持使用 @RequestBody 和 @ResponseBody 注解
+> 5. 静态资源的分流也使用这个标签
+
+### 10.资源在WEB-INF 目录下
+
+ 很多**企业会将动态资源放在WEB-INF目录下**，这样可以保证资源的**安全性**。在WEB-INF目录下的**动态资源不可以直接访问**，必须要通过**请求转发的方式进行访问**。这样避免了通过地址栏直接对资源的访问。**重定向也无法访问动态资源**。
+
+
+
+
+
+## 拦截器
+
+
+
+### 1.介绍
+
+> SpringMVC 中的 Interceptor 拦截器，它的主要作用是拦截指定的用户请求，并进行相应的预处理与后处理。其拦截的时间点在“处理器映射器根据用户提交的请求映射出了所要执行的处理器类，并且也找到了要执行该处理器类的处理器适配器，在处理器适配器执行处理器之前”。当然，在处理器映射器映射出所要执行的处理器类时，已经将拦截器与处理器组合为了一个处理器执行链，并返回给了中央调度器。
+
+
+
+### 2.拦截器的运用场景
+
+- 日志记录：记录请求信息的日志
+- 权限检查，如登录检查
+- 性能检测：检测方法的执行时间
+
+
+
+### 3.拦截器的执行原理
+
+![image-20230620192002120](assets/image-20230620192002120.png)
+
+
+
+
+
+### 4.执行时机
+
+1. preHandle():在请求被处理之前进行操作  	 **预处理**
+2. postHandle():在请求被处理之后,但结果还没有渲染前进行操作,可以改变响应结果     **后处理**
+3. afterCompletion:所有的请求响应结束后执行善后工作,清理对象,关闭资源      **最终处理**
+
+
+
+
+
+### 5.拦截器的2种实现方式
+
+- 继承HandlerInterceptorAdapter的父类
+
+- 实现HandlerInterceptor接口,实现的接口,  **推荐使用实现接口的方式**
+
+#### HandlerInterceptor接口分析
+
+自定义拦截器，需要实现 HandlerInterceptor 接口。而该接口中含有三个方法：
+
+- preHandle
+
+该方法在**处理器方法执行之前执行**。其返回值为 boolean，若为 true，则紧接着会执行处理器方法，且会将 afterCompletion()方法放入到一个专门的方法栈中等待执行。
+
+- postHandle
+
+该方法在**处理器方法执行之后执行**。处理器方法若最终未被执行，则该方法不会执行。由于该方法是在处理器方法执行完后执行，且该方法参数中包含 ModelAndView，所以该方法可以修改处理器方法的处理结果数据，且可以修改跳转方向。
+
+- afterCompletion
+
+当**preHandle()方法返回 true 时**，会将该方法放到专门的方法栈中，等到对请求进行响应的所有工作完成之后才执行该方法。即该方法是在中央调度器渲染（数据填充）了响应页面之后执行的，此时对 ModelAndView 再操作也对响应无济于事。afterCompletion 最后执行的方法，清除资源，例如在 Controller 方法中加入数据等。
+
+
+
+
+
+
+
+### 6.自定义拦截器
+
+**实现一个权限验证拦截器。**
+
+- 修改web.xml文件中请求路径 改为 / 接收所有请求
+
+```xml
+    <servlet-mapping>
+        <servlet-name>springmvc</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+```
+
+- 将所有的页面放入WEB-INF目录下
+
+![image-20230620193734323](assets/image-20230620193734323.png)
+
+- 开发登录action
+
+![image-20230620193826515](assets/image-20230620193826515.png)
+
+- 开发拦截器
+
+![image-20230620193931159](assets/image-20230620193931159.png)
+
+
+
+- 配置springmvc.xml文件
+
+```xml
+<!--    注册拦截器-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+<!--            配置拦截的路径（那些请求要被拦截）-->
+            <mvc:mapping path="/**"/> 
+<!--            配置那些请求放行-->
+            <mvc:exclude-mapping path="/login"/>
+            <mvc:exclude-mapping path="showlogin"/>
+<!--           配置拦截类 -->
+            <bean class="com.oyy.interceptor.MyHandlerInterceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+```
