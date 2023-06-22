@@ -634,7 +634,7 @@ public String testModelMap(ModelMap modelMap){
 
 Model、ModelMap、Map类型的参数其实本质上都是 BindingAwareModelMap 类型的
 
-```
+```java
 public interface Model{}
 public class ModelMap extends LinkedHashMap<String, Object> {}
 public class ExtendedModelMap extends ModelMap implements Model {}
