@@ -5087,7 +5087,7 @@ import javax.sql.DataSource;
 @ComponentScan("com.atguigu.spring6")
 @EnableTransactionManagement
 public class SpringConfig {
-
+	//数据源DataSource Drui连接池
     @Bean
     public DataSource getDataSource(){
         DruidDataSource dataSource = new DruidDataSource();
@@ -5097,14 +5097,15 @@ public class SpringConfig {
         dataSource.setPassword("root");
         return dataSource;
     }
-
+	
     @Bean(name = "jdbcTemplate")
     public JdbcTemplate getJdbcTemplate(DataSource dataSource){
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         jdbcTemplate.setDataSource(dataSource);
         return jdbcTemplate;
     }
-
+	
+    // 配置事务管理器的bean 对DataSource 数据源的连接进行管理
     @Bean
     public DataSourceTransactionManager getDataSourceTransactionManager(DataSource dataSource){
         DataSourceTransactionManager dataSourceTransactionManager = new DataSourceTransactionManager();
