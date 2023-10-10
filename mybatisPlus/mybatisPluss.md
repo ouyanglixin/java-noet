@@ -14,7 +14,6 @@ public interface CategoryService extends IService<Category> {
 @Service
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> implements CategoryService {
 }
-
 ```
 
 

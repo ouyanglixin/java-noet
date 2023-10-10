@@ -8,7 +8,7 @@ surround with…用if,while,try…catch…等的语句块将一段代码包起�
 **Ctrl + P**
 查看类的构造器所需参数
 **Ctrl + F12**
-就地查找
+就地查找 字段 方法名
 **Ctrl + H**
 查看继承的层级关系
 **Ctrl + 7**
@@ -29,3 +29,10 @@ surround with…用if,while,try…catch…等的语句块将一段代码包起�
 查看方法所属的实现类
 **Shift + F6**
 同时改变多处自定义的名称
+
+查看类图 快捷键 ： **Ctrl + shift + Alt +U**   Ctrl + Alt + B 添加类图关系 Ctrl + A 添加所有类图
+
+
+
+
+
