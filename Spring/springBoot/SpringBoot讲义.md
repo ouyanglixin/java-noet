@@ -5932,13 +5932,13 @@ class Springboot17MongodbApplicationTests {
 
    - 此时就会出现如下对应结果，按照上述形式可以对所有文档进行分词。需要注意分词的过程不是仅对一个字段进行，而是对每一个参与查询的字段都执行，最终结果汇总到一个表格中
 
-     | 分词结果关键字 | 对应id |
-     | -------------- | ------ |
-     | 中华           | 1      |
-     | 人民           | 1,2    |
-     | 共和国         | 1      |
-     | 代表           | 2      |
-     | 大会           | 2      |
+     | jj        |      |
+     | --------- | ---- |
+     |           |      |
+     |           | 1,2  |
+     | 共和国jjj | 1    |
+     | 代表      | 2    |
+     | 大会      | 2    |
 
 3. 当进行查询时，如果输入“人民”作为查询条件，可以通过上述表格数据进行比对，得到id值1,2，然后根据id值就可以得到查询的结果数据了。
 
@@ -6959,7 +6959,7 @@ public class SMSCodeServiceImpl implements SMSCodeService {
         String code = codeUtils.generator(tele);
         try {
             memcachedClient.set(tele,10,code);
-        } catch (Exception e) {
+        } catch (Exception e) {`
             e.printStackTrace();
         }
         return code;
@@ -7093,6 +7093,7 @@ public class Springboot20JetCacheApplication {
         SpringApplication.run(Springboot20JetCacheApplication.class, args);
     }
 }
+报空指针的在启动类上加上@EnableMethodCache(basePackages = "com.example.jetCacheTest")
 ```
 
 **步骤④**：创建缓存对象Cache，并使用注解@CreateCache标记当前缓存的信息，然后使用Cache对象的API操作缓存，put写缓存，get读缓存。
@@ -7712,7 +7713,7 @@ memcached.sanitizeKeys = false
 
 ### KF-5-2.任务
 
-​		springboot整合第三方技术第二部分我们来说说任务系统，其实这里说的任务系统指的是定时任务。定时任务是企业级开发中必不可少的组成部分，诸如长周期业务数据的计算，例如年度报表，诸如系统脏数据的处理，再比如系统性能监控报告，还有抢购类活动的商品上架，这些都离不开定时任务。本节将介绍两种不同的定时任务技术。
+​		springboot整合第三方技术第二部分我们来说说任务系，其实这里说的任务系统指的是定时任务。定时任务是企业级开发中必不可少的组成部分，诸如长周期业务数据的计算，例如年度报表，诸如系统脏数据的处理，再比如系统性能监控报告，还有抢购类活动的商品上架，这些都离不开定时任务。本节将介绍两种不同的定时任务技术。
 
 
 
