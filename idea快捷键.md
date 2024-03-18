@@ -1,5 +1,14 @@
 # idea快捷键
 
+查找占用端口的进程 并kill
+
+````powershell
+netstat -ano | findstr :8080
+taskkill pid
+````
+
+
+
 **Ctrl + 鼠标左击**
 ①查看方法或者类的源码，若为类的实例化的对象，则跳转到该对象的实例化处
 ②查看类的对象实例的使用位置

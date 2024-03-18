@@ -1307,6 +1307,7 @@ docker compose [OPTIONS] [COMMAND]
 
 | **类型** | **参数或指令**                                               | **说明**                    |
 | :------- | :----------------------------------------------------------- | :-------------------------- |
+|          | docker compose -p oyy-project down                           | 删除指定工程的所有ron'qi    |
 | Options  | -f                                                           | 指定compose文件的路径和名称 |
 | -p       | 指定project名称。project就是当前compose文件中设置的多个service的集合，是逻辑概念 |                             |
 | Commands | up                                                           | 创建并启动所有service容器   |
