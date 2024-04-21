@@ -148,7 +148,7 @@ systemctl restart docker
 ```PowerShell
 docker run -d \
   --name mysql \
-  -p 3306:3306 \
+  -p 3307:3306 \
   -e TZ=Asia/Shanghai \
   -e MYSQL_ROOT_PASSWORD=123 \
   mysql
@@ -465,8 +465,6 @@ source /root/.bashrc
 
 
 ![image-20240309195608905](assets/image-20240309195608905.png)
-
-
 
 
 

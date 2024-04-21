@@ -174,7 +174,7 @@ nginx.exe -s restart
 
 
 
-# （1.）Nacos OpenFeign
+# (1)Nacos OpenFeign
 
 # 1.认识微服务
 
@@ -1740,7 +1740,7 @@ public class DefaultFeignConfig {
 
 
 
-#  （2.）网关 router 和 配置管理
+#  (2)网关 router 和 配置管理
 
 
 
@@ -3213,7 +3213,7 @@ public class DynamicRouteLoader {
 
 
 
-# （3.）服务保护和分布式事务
+# (3)服务保护和分布式事务
 
 
 
@@ -3706,7 +3706,7 @@ https://seata.io/zh-cn/docs/overview/what-is-seata.html
 
 Seata也不例外，在Seata的事务管理中有三个重要的角色：
 
--  **TC** **(****Transaction Coordinator****) -** **事务协调者：**维护全局和分支事务的状态，协调全局事务提交或回滚。 
+-  **TC(**Transaction Coordinator**) -** **事务协调者：**维护全局和分支事务的状态，协调全局事务提交或回滚。 
 -  **TM (Transaction Manager) -** **事务管理器：**定义全局事务的范围、开始全局事务、提交或回滚全局事务。 
 -  **RM (Resource Manager) -** **资源管理器：**管理分支事务，与TC交谈以注册分支事务和报告分支事务的状态，并驱动分支事务提交或回滚。 
 
@@ -3752,10 +3752,10 @@ docker network connect [网络名] [容器名]
 docker run --name seata \
 -p 8099:8099 \
 -p 7099:7099 \
--e SEATA_IP=192.168.150.101 \
+-e SEATA_IP=192.168.238 \
 -v ./seata:/seata-server/resources \
 --privileged=true \
---network hm-net \
+--network hmall \
 -d \
 seataio/seata-server:1.5.2
 ```
@@ -3901,6 +3901,8 @@ Seata支持四种不同的分布式事务解决方案：
 - **TCC**
 - **AT**
 - **SAGA**
+
+![image-20240321160021322](assets/image-20240321160021322.png)
 
 这里我们以`XA`模式和`AT`模式来给大家讲解其实现原理。
 
@@ -4112,3 +4114,14 @@ public void tryPayOrderByBalance(PayOrderDTO payOrderDTO) {
 ```
 
 利用seata解决这里的分布式事务问题，并思考这个业务实现有没有什么值得改进的地方
+
+
+
+# (4)RabbitMQ
+
+
+
+
+
+
+
