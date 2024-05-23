@@ -4011,6 +4011,75 @@ int main() {
 
 内存资源是很宝贵的（不像硬盘几个T随便用，我们的电脑可能32G的内存都算高配了），不能随便浪费，所以一般情况下malloc和free都是一一对应的，这样才能安全合理地使用内存。
 
+
+
+**对变量的内存空间进行扩容**
+
+在C语言中，`realloc` 函数用于重新分配先前已分配的内存块的大小。它的主要作用是在不丢失原有数据的前提下改变已分配内存块的大小。
+
+`realloc` 函数的原型如下：
+
+```c
+c复制代码
+
+void *realloc(void *ptr, size_t size);
+```
+
+参数说明：
+
+- `ptr`：指向要重新分配的内存块的指针。如果此指针为 `NULL`，则 `realloc` 的行为类似于 `malloc`，为新的大小分配内存。
+- `size`：新的内存块大小（以字节为单位）。
+
+返回值：
+
+- 如果成功，`realloc` 返回指向新的内存块的指针（该内存块可能已移动）。
+- 如果失败，`realloc` 返回 `NULL`，并且原内存块的内容保持不变。
+
+注意事项：
+
+1. 使用 `realloc` 后，应该总是检查返回值是否为 `NULL`，以防内存分配失败。
+2. 如果 `realloc` 成功，并且返回了新的地址（与原地址不同），则原来的指针 `ptr` 指向的内存块将被释放。因此，你应该总是使用 `realloc` 返回的新指针，而不是原始指针。
+3. `realloc` 可能会移动内存块，因此你不能依赖于任何指向原始内存块的指针（除了传递给 `realloc` 的那个）在调用后仍然有效。
+
+示例代码：
+
+```c
+#include <stdio.h>  
+#include <stdlib.h>  
+  
+int main() {  
+    int *array = (int *)malloc(5 * sizeof(int)); // 分配5个整数的内存  
+    if (array == NULL) {  
+        perror("malloc failed");  
+        return 1;  
+    }  
+  
+    // 假设我们填充了数组...  
+  
+    // 现在我们想要扩展数组到10个整数  
+    int *new_array = (int *)realloc(array, 10 * sizeof(int));  
+    if (new_array == NULL) {  
+        perror("realloc failed");  
+        free(array); // 不要忘记释放原始内存  
+        return 1;  
+    }  
+  
+    // 注意：此时应该使用 new_array 而不是 array，因为内存块可能已经移动  
+    array = new_array; // 更新指针  
+  
+    // 继续使用新的数组...  
+  
+    free(array); // 释放内存  
+    return 0;  
+}
+```
+
+在这个例子中，我们首先使用 `malloc` 分配了一个包含5个整数的数组。然后，我们使用 `realloc` 来扩展这个数组到10个整数。如果 `realloc` 成功，我们更新指针 `array` 以指向新的内存块，并继续使用它。如果 `realloc` 失败，我们释放原始内存并处理错误。
+
+
+
+
+
 ### 宏定义
 
 我们前面认识了`#include`指令，我们接着来看`#define`指令，它可以实现宏定义。我语文不好，宏是啥意思？
