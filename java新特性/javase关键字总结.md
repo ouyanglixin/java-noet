@@ -409,6 +409,3 @@ public class Main {
 
 Java中还有两个保留字，目前没有任何作用，但是就是有：`goto`、`const`
 
-————————————————
-版权声明：本文为柏码知识库版权所有，禁止一切未经授权的转载、发布、出售等行为，违者将被追究法律责任。
-原文链接：https://www.itbaima.cn/document/tsrkqvb6zpmtwh0n
